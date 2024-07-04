@@ -1,5 +1,5 @@
 # Базовый образ с Python
-FROM python:3.12
+FROM python:latest
 
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
@@ -11,4 +11,4 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Команда для запуска бота при старте контейнера
-CMD ["python", "nbu_currency.py"]
+CMD ["python3", "nbu_currency.py"]
