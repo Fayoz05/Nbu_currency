@@ -3,13 +3,14 @@ import requests
 from telebot import types
 import buttons as bt
 
-bot = telebot.TeleBot('YOUR_TELEGRAM_TOKEN')
+bot = telebot.TeleBot('6793497603:AAEC2ZQ3uaiHafyd6lnyJIbUDvM9WRo7SWU')
 
 list1 = ["USD", "EUR", "RUB", "KZT", "JPY", "GBP"]
 list2 = ["Доллар США", "Евро", "Российский рубль", "Казахстанский тенге", "Японская иена", "Английский фунт стерлингов",
          "Швейцарский франк"]
 
 user_data = {}
+
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -39,12 +40,14 @@ def get_currency(message):
     else:
         bot.send_message(user_id, "К сожалению, не нашел такой валюты на сайте.")
 
+
 def handle_back_or_convert(message):
     user_id = message.from_user.id
     if message.text == "Конвертер💸":
         bot.send_message(user_id, "Выберите направление конвертации:", reply_markup=bt.select_value())
     elif message.text == "Назад🔙":
         bot.send_message(user_id, "Выберите действие:", reply_markup=bt.main_kb())
+
 
 def handle_conversion(message, direction):
     user_id = message.from_user.id
@@ -72,6 +75,7 @@ def handle_conversion(message, direction):
     except ValueError:
         bot.send_message(user_id, "Пожалуйста, введите сумму в числах или в десятичных (Например: 0.1) ")
         bot.register_next_step_handler(message, lambda msg: handle_conversion(msg, direction))
+
 
 @bot.message_handler(content_types=['text'])
 def main_menu(message):
@@ -108,6 +112,7 @@ def main_menu(message):
     elif message.text == "Продажа📉":
         bot.send_message(user_id, "Выберите валюту:", reply_markup=bt.cell_kb())
 
+
 @bot.callback_query_handler(func=lambda call: call.data in list1)
 def get_buy_currency(call):
     user_id = call.from_user.id
@@ -127,6 +132,7 @@ def get_buy_currency(call):
                 break
     else:
         bot.send_message(user_id, "К сожалению не нашел такой валюты на сайте :(")
+
 
 @bot.callback_query_handler(func=lambda call: call.data in list2)
 def get_cell_currency(call):
@@ -148,12 +154,15 @@ def get_cell_currency(call):
     else:
         bot.send_message(user_id, "К сожалению не нашел такой валюты на сайте :(")
 
+
 @bot.callback_query_handler(func=lambda call: call.data in ["from_uzs", "to_uzs"])
 def handle_conversion_direction(call):
     user_id = call.from_user.id
     direction = call.data
     bot.send_message(user_id, "Пожалуйста, введите сумму:")
     bot.register_next_step_handler(call.message, lambda msg: handle_conversion(msg, direction))
+    bot.edit_message_reply_markup(chat_id=user_id, message_id=call.message.message_id, reply_markup=None)
+
 
 if __name__ == '__main__':
     bot.polling(non_stop=True)
