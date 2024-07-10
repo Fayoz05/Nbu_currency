@@ -26,8 +26,10 @@ def send_currencies_info(message):
     try:
         info = get_currencies_info()
         bot.send_message(message.chat.id, f"<pre>{info}</pre>", parse_mode='HTML')
+        bot.send_message(user_id, "Выберите действие:", reply_markup=bt.main_kb())
     except Exception as e:
         bot.send_message(message.chat.id, f"Произошла ошибка: {e}")
+        bot.send_message(user_id, "Выберите действие:", reply_markup=bt.main_kb())
 
 
 def get_currency(message):
@@ -50,8 +52,6 @@ def get_currency(message):
     else:
         bot.send_message(user_id, "К сожалению, не нашел такой валюты на сайте.")
 
-
-# def get_list_of_curryncies
 def handle_back_or_convert(message):
     user_id = message.from_user.id
     if message.text == "Конвертер💱":
