@@ -4,7 +4,7 @@ from telebot import types
 import buttons as bt
 import pandas as pd
 
-bot = telebot.TeleBot('6793497603:AAEC2ZQ3uaiHafyd6lnyJIbUDvM9WRo7SWU')
+bot = telebot.TeleBot('YOUR_TELEGRAM_TOKEN')
 
 list1 = ["USD", "EUR", "RUB", "KZT", "JPY", "GBP", "CHF"]
 list2 = ["Доллар США", "Евро", "Российский рубль", "Казахстанский тенге", "Японская иена", "Английский фунт стерлингов",
