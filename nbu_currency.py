@@ -141,13 +141,12 @@ def get_currencies_info():
             data.append([title, nbu_cell_price, nbu_buy_price])
             date = currency["date"]
 
-    df = pd.DataFrame(data, columns=["Валюта 💰", "Покупка📈", "Продажа📉"])
-    df["Продажа📉"] = pd.to_numeric(df["Продажа📉"], errors='coerce')
-    df = df.sort_values(by="Продажа📉", ascending=False)
+    df = pd.DataFrame(data, columns=["Валюта ", "Покупка", "Продажа"])
+    df["Продажа"] = pd.to_numeric(df["Продажа"], errors='coerce')
+    df = df.sort_values(by="Продажа", ascending=False)
 
-    # Формируем результат для отправки пользователю
     result = ""
-    result += f"{'  Валюта 💰':^18} {'Покупка📈':^10} {'Продажа📉':^10}\n"
+    result += f"{'Валюта':^20} {'Покупка':^10} {' Продажа':^10}\n"
     result += "-" * 43 + "\n"
 
     for _, row in df.iterrows():
@@ -156,6 +155,7 @@ def get_currencies_info():
 
     result += "\nДата изменения курса: " + date
     return result
+
 
 
 @bot.callback_query_handler(func=lambda call: call.data in list1)
