@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="1fa0c1f6-c0b9-471d-b807-ba384c1b6b22" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/buttons.py" beforeDir="false" afterPath="$PROJECT_DIR$/buttons.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nbu_currency.py" beforeDir="false" afterPath="$PROJECT_DIR$/nbu_currency.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +38,7 @@
   "keyToString": {
     "Python.buttons.executor": "Run",
     "Python.nbu_currency.executor": "Run",
+    "Python.test.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/Users/acern/bot currency"

@@ -2,11 +2,12 @@ from telebot import types
 
 
 def main_kb():
-    kb = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-    btn1 = types.KeyboardButton("Курс ЦБ🏦")
-    btn2 = types.KeyboardButton("Покупка📈")
-    btn3 = types.KeyboardButton("Продажа📉")
-    kb.add(btn1, btn2, btn3)
+    kb = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2, one_time_keyboard=True)
+    btn1 = types.KeyboardButton("Курс валюты ЦБ🏦")
+    btn2 = types.KeyboardButton("Курсы валют 💸")
+    btn3 = types.KeyboardButton("Покупка📈")
+    btn4 = types.KeyboardButton("Продажа📉")
+    kb.add(btn1, btn2, btn3, btn4)
     return kb
 
 
@@ -21,6 +22,7 @@ def buy_kb():
     chf = types.InlineKeyboardButton(text="CHF🇨🇭", callback_data="CHF")
     kb.add(usd, eur, rub, kzt, jpy, gbp, chf)
     return kb
+
 
 def cell_kb():
     kb = types.InlineKeyboardMarkup(row_width=2)
@@ -63,24 +65,24 @@ def currency_kb():
         "SGD - Сингапурский доллар 🇸🇬",
     ]
 
-    kb = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True,one_time_keyboard=True)
+    kb = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
     for button_text in currency_buttons:
         button = types.KeyboardButton(text=button_text)
         kb.add(button)
     return kb
 
+
 def back_or_convert():
     kb = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
     back = types.KeyboardButton("Назад🔙")
-    convert = types.KeyboardButton("Конвертер💸")
-    kb.add(back,convert)
+    convert = types.KeyboardButton("Конвертер💱")
+    kb.add(back, convert)
     return kb
+
 
 def select_value():
     kb = types.InlineKeyboardMarkup(row_width=1)
     from_uzs = types.InlineKeyboardButton("Из UZS", callback_data="from_uzs")
     to_uzs = types.InlineKeyboardButton("В UZS", callback_data="to_uzs")
-    kb.add(from_uzs,to_uzs)
+    kb.add(from_uzs, to_uzs)
     return kb
-
-

@@ -2,12 +2,14 @@ import telebot
 import requests
 from telebot import types
 import buttons as bt
+import pandas as pd
 
 bot = telebot.TeleBot('6793497603:AAEC2ZQ3uaiHafyd6lnyJIbUDvM9WRo7SWU')
 
-list1 = ["USD", "EUR", "RUB", "KZT", "JPY", "GBP"]
+list1 = ["USD", "EUR", "RUB", "KZT", "JPY", "GBP", "CHF"]
 list2 = ["Доллар США", "Евро", "Российский рубль", "Казахстанский тенге", "Японская иена", "Английский фунт стерлингов",
          "Швейцарский франк"]
+list3 = ["USD", "EUR", "RUB", "KZT", "JPY"]
 
 user_data = {}
 
@@ -18,6 +20,14 @@ def start(message):
     username = message.from_user.first_name
     bot.send_message(user_id, f"""Привет {username}! Это бот привязанный к курсу валют по курсу NBU.
 Выберите действие:""", reply_markup=bt.main_kb())
+
+
+def send_currencies_info(message):
+    try:
+        info = get_currencies_info()
+        bot.send_message(message.chat.id, f"<pre>{info}</pre>", parse_mode='HTML')
+    except Exception as e:
+        bot.send_message(message.chat.id, f"Произошла ошибка: {e}")
 
 
 def get_currency(message):
@@ -41,9 +51,10 @@ def get_currency(message):
         bot.send_message(user_id, "К сожалению, не нашел такой валюты на сайте.")
 
 
+# def get_list_of_curryncies
 def handle_back_or_convert(message):
     user_id = message.from_user.id
-    if message.text == "Конвертер💸":
+    if message.text == "Конвертер💱":
         bot.send_message(user_id, "Выберите направление конвертации:", reply_markup=bt.select_value())
     elif message.text == "Назад🔙":
         bot.send_message(user_id, "Выберите действие:", reply_markup=bt.main_kb())
@@ -80,7 +91,7 @@ def handle_conversion(message, direction):
 @bot.message_handler(content_types=['text'])
 def main_menu(message):
     user_id = message.from_user.id
-    if message.text == "Курс ЦБ🏦":
+    if message.text == "Курс валюты ЦБ🏦":
         bot.send_message(user_id, f"""Выберите валюту, чтобы узнать ее курс ЦБ:
 "USD" - "Доллар США" 🇺🇸
 "EUR" - "Евро" 🇪🇺
@@ -107,10 +118,44 @@ def main_menu(message):
 "SEK" - "Шведская крона" 🇸🇪
 "SGD" - "Сингапурский доллар" 🇸🇬 """, reply_markup=bt.currency_kb())
         bot.register_next_step_handler(message, get_currency)
+    elif message.text == "Курсы валют 💸":
+        send_currencies_info(message)
     elif message.text == "Покупка📈":
         bot.send_message(user_id, "Выберите валюту:", reply_markup=bt.buy_kb())
     elif message.text == "Продажа📉":
         bot.send_message(user_id, "Выберите валюту:", reply_markup=bt.cell_kb())
+
+
+def get_currencies_info():
+    data = []
+    date = ""
+
+    response = requests.get("https://nbu.uz/exchange-rates/json/")
+    currency_list = response.json()
+
+    for currency in currency_list:
+        if currency["code"] in list3:
+            title = currency["title"]
+            nbu_cell_price = currency["nbu_cell_price"] if currency["nbu_cell_price"] is not None else "N/A"
+            nbu_buy_price = currency["nbu_buy_price"] if currency["nbu_buy_price"] is not None else "N/A"
+            data.append([title, nbu_cell_price, nbu_buy_price])
+            date = currency["date"]
+
+    df = pd.DataFrame(data, columns=["Валюта 💰", "Покупка📈", "Продажа📉"])
+    df["Продажа📉"] = pd.to_numeric(df["Продажа📉"], errors='coerce')
+    df = df.sort_values(by="Продажа📉", ascending=False)
+
+    # Формируем результат для отправки пользователю
+    result = ""
+    result += f"{'  Валюта 💰':^18} {'Покупка📈':^10} {'Продажа📉':^10}\n"
+    result += "-" * 43 + "\n"
+
+    for _, row in df.iterrows():
+        title, nbu_cell_price, nbu_buy_price = row
+        result += f"{title:^20} {nbu_cell_price:^11} {nbu_buy_price:^10}\n"
+
+    result += "\nДата изменения курса: " + date
+    return result
 
 
 @bot.callback_query_handler(func=lambda call: call.data in list1)
